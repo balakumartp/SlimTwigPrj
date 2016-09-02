@@ -1,0 +1,53 @@
+{% extends "base.twig.html" %}
+{% block title %}{{ page.title }}{% endblock %}
+{% block content %}
+<div class="container">
+	 {% block container %}
+	 <div class="row">
+               <div class="col-sm-12">
+					<div class="page-header">
+						<h2>User Registration {{page.username}}</h2>
+					</div>
+					<span id="reg_status"></span>
+					<form id="RegForm" method="POST" action ="register" onsubmit="return formsubmit();">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">First Name</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="firstname" name="firstname" placeholder="First Name" />
+                        </div>
+                        
+                    </div> 
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Last Name</label> 
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last Name" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">User Name</label> 
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="username" name="username" placeholder="User Name" onmouseout="return checkname();" onkeyup="return checkname();" />
+							<span id="name_status"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Password</label> 
+                        <div class="col-sm-9">
+                   <input type="password" class="form-control" id="password" name="password" placeholder="Password"  />
+                        </div>
+                    </div>
+
+                   <div class="form-group">
+                        <div class="col-sm-9 col-sm-offset-6">
+                            <input type="submit"   id="submit" name="submit"  value="submit"  class="submitbtn"  >  
+                        </div>
+                    </div>
+                    </form>
+               </div>  
+       </div>
+       {% endblock %}	   
+ </div>
+{% endblock %}
