@@ -1,0 +1,19 @@
+ body
+		{
+		  background-color:#D3D3D3;
+		}
+		.container
+		{
+			width:45%;
+		}
+		input[type=text],.txtarea{
+			margin-bottom: 10px;
+		}
+		.success {
+			background: #3adb76;
+			color: #fefefe; 
+		}
+		.failure {
+			background: #ec5840;
+			color: #fefefe; 
+		}
