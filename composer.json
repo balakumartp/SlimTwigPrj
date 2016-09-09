@@ -1,1 +1,24 @@
-{ "require": { "slim/slim": "^3.0", "slim/twig-view": "^2.1" } }
+{
+  "name": "Slim3 With Symphony console component",
+  "description": "A Slim3 skeleton with console",
+  "license": "MIT",
+  "type": "project",
+  "keywords": [
+    "slim-framework", 
+    "console" 
+  ], 
+  "autoload": {
+    "psr-4": {
+      "Rena\\": "Src/",
+      "App\\": "App/"
+    }
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "slim/slim": "3.3.*",
+    "slim/twig-view": "2.1.*",
+    "symfony/console": "3.0.*",
+    "slim/flash": "^0.1.0" 
+  }
+}
+
