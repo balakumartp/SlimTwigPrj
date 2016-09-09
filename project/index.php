@@ -1,4 +1,5 @@
 <?php
+session_start();
 ini_set("display_errors",1);
  
 require 'vendor/autoload.php';
@@ -10,6 +11,7 @@ $config = [
 ];
 $app = new Slim\App($config);
 $container = $app->getContainer();
+ 
 
 $container['view'] = function ($container) {
     $view = new \Slim\Views\Twig('templates', [
@@ -19,8 +21,14 @@ $container['view'] = function ($container) {
         $container['router'],
         $container['request']->getUri()
     ));
-
+    $view->getEnvironment()->addGlobal('flash', $container['flash']);
     return $view;
+};
+
+
+// Register provider
+$container['flash'] = function () {
+    return new \Slim\Flash\Messages();
 };
 
 $container['db'] = function ($c) {
@@ -33,50 +41,78 @@ $container['db'] = function ($c) {
 }; 
  
 $app->get('/', function (Slim\Http\Request $request, Slim\Http\Response $response, array $args)   {
+	
+	$basePath = $request->getUri()->getBasePath();
    $vars = [
             'page' => [
             'title' => 'Welcome Our Slim Project.',
-			'thanks'=>''
+			'password_status' => '',
+			'thanks'=>'',
+			'base_url' =>$basePath
 		    ],
           ];
-          return $this->view->render($response, 'register.twig.html', $vars);
-})->setName('register');
+          return $this->view->render($response, 'login.twig.html', $vars);
+});
+
+
+
+$app->get('/login', function (Slim\Http\Request $request, Slim\Http\Response $response, array $args)   {
+	
+	$basePath = $request->getUri()->getBasePath();
+   $vars = [
+            'page' => [
+            'title' => 'Welcome Our Slim Project.',
+			'thanks'=>'',
+			'base_url' =>$basePath
+		    ],
+          ];
+          return $this->view->render($response, 'login.twig.html', $vars);
+})->setName('login'); 
 	
 	 
-$app->get('/checkdata[/{username}]', function ($request, $response, $args) {
+$app->post('/postlogin', function($request, $response, $args)  use($app) {
+  
 	$connection = $this->get("db");
-	$username=$args['username'];
-	$query='select count(*) from slimtable where username="'.     $args['username'].'"';
+	$basePath = $request->getUri()->getBasePath();
+	$username=$request->getParam('username');;
+	$password=$request->getParam('password');
+	
+	if (!empty($username) && !empty($password) ){
+
+    $query='select count(*) from slimtable where username="'.$username.'" and  password="'.$password.'"';
 	$result=$connection->query($query);
 	$num_rows=$result->fetchColumn();
 	 if($num_rows >0)
 	 {
-	  $response->write("User Already Exists");
+	  $password_status=1;
 	 }  
-         return $response;
-})->setName('checkdata'); 
-
-	
-$app->post('/register', function(Slim\Http\Request $request, Slim\Http\Response $response, array $args){
-	$firstname = $request->getParam('firstname');
- 	$lastname = $request->getParam('lastname');
-	$username = $request->getParam('username');
-	$password = $request->getParam('password');
-	$connection = $this->get("db");
-	$uri = $request->getUri();
-	$query="insert into slimtable(`firstname`,`lastname`,`username`,`password`) values('$firstname','$lastname','$username','$password')";
-    $result=$connection->query($query);
-	if($result)
-	  {  
-		      $vars = [
+	 else
+	 {
+		 $password_status=2;
+     }	
+	 
+	  $vars = [
             'page' => [
-            'thanks' => "Registered Successfully"
+            'title' => 'Welcome Our Slim Project.',
+			'password_status' => $password_status,
+			'thanks'=>'',
+			'base_url' =>$basePath
 		    ],
-        ];
-      $basePath = $request->getUri()->getBasePath();
-       		 //return $this->view->render($response, 'register.twig.html', $vars);
-			 
-			return $response->withHeader('Location', $basePath);
-	  }	  
-});
+          ];
+	  $this->flash->addMessage('password_status', $password_status);
+	 return $response->withRedirect($this->get('router')->pathFor('login'));
+ 	} 
+	
+	else {
+	       
+		   
+		   return $response->withRedirect($this->get('router')->pathFor('login'));
+		   
+ 
+	}
+	
+ 
+})->setName('postlogin'); 
+
+
 $app->run();
