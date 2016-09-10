@@ -14,6 +14,7 @@ INSERT INTO `slimtable` (`id`, `firstname`, `lastname`, `username`, `password`) 
 (2, 'Ganesh', 'paramasivam', 'ganesh', 'ganesh123'),
 (3, 'Praveen', 'Kumar', 'praveen', '123456'),
 (4, 'Guna', 'Sekar', 'guna', '12333'),
+(5, '', '', 'hamr', 'hamr1234!'),
 
 
 ALTER TABLE `slimtable`
